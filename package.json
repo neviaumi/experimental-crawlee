@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@crawlee/browser-pool": "^3.11.5",
     "crawlee": "^3.11.5",
     "playwright": "^1.48.1"
   }
