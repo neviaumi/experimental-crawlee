@@ -1,4 +1,4 @@
-import * as crawler from "./crawler.js"
+import * as requestQueue from "./request-queue.js"
 import {createServer} from "node:http"
 
 const server = createServer(async (req, res) => {
@@ -8,7 +8,7 @@ const server = createServer(async (req, res) => {
         res.end('Request ID is required')
         return;
     }
-    const resp = await crawler.processRequest({
+    const resp = await requestQueue.processRequest({
         id: reqId,
         url: 'https://www.ocado.com/products/asahi-super-dry-beer-lager-bottles-631029011'
     })
@@ -39,7 +39,7 @@ server.listen(3000, () => {
     }))
         .finally(async () => {
             console.log('Destroying crawler and closing server')
-            await crawler.destroy()
+            await requestQueue.destroy()
             server.close()
         })
 })
