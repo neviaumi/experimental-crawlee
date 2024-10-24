@@ -1,4 +1,4 @@
-import {crawler, browserPool} from "./crawler.js"
+import * as crawler from "./crawler.js"
 import {createServer} from "node:http"
 
 const server = createServer(async (req, res) => {
@@ -8,13 +8,10 @@ const server = createServer(async (req, res) => {
         res.end('Request ID is required')
         return;
     }
-    const resp = await crawler.run(reqId, [{
-    userData: {
-        label: 'OCADO',
-        requestId: reqId
-    },
-    url: 'https://www.ocado.com/products/asahi-super-dry-beer-lager-bottles-631029011'
-}])
+    const resp = await crawler.processRequest({
+        id: reqId,
+        url: 'https://www.ocado.com/products/asahi-super-dry-beer-lager-bottles-631029011'
+    })
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(Object.assign(resp, {reqId})));
 })
@@ -41,7 +38,8 @@ server.listen(3000, () => {
             return resp
     }))
         .finally(async () => {
-            await browserPool.destroy()
+            console.log('Destroying crawler and closing server')
+            await crawler.destroy()
             server.close()
         })
 })
